@@ -90,9 +90,12 @@ import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateD
 /* Replace these placeholder values with your Firebase web-app configuration. */
 const firebaseConfig = {
  apiKey: "AIzaSyBNix367EZfqlT8cBVt_R9AlYLfHIKRu_M",
- authDomain: "sk-tailor-s-production.firebaseapp.com,
- projectId: "sk-tailor-s-production",
- appId: 1:51868716447:web:33042ed8623535310ec1aa" 
+  authDomain: "sk-tailor-s-production.firebaseapp.com",
+  projectId: "sk-tailor-s-production",
+  storageBucket: "sk-tailor-s-production.firebasestorage.app",
+  messagingSenderId: "51868716447",
+  appId: "1:51868716447:web:33042ed8623535310ec1aa",
+  measurementId: "G-74GQJ3NSXQ"
 };
 const configured = !Object.values(firebaseConfig).some(v => String(v).startsWith("PASTE_"));
 const $ = id => document.getElementById(id);
