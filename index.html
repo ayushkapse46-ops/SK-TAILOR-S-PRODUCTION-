@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#163b35">
+<title>S.K. TAILOR'S — Production Manager</title>
+<style>
+:root{--green:#163b35;--green2:#24594f;--cream:#f5f6f1;--line:#d9dfd8;--ink:#17211f;--muted:#66736f;--white:#fff;--red:#a23a32}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--green);color:white;font-weight:650}button.secondary{background:#e7ece7;color:var(--green)}button.danger{background:#f9e7e5;color:var(--red)}button:disabled{opacity:.55;cursor:wait}
+header{background:var(--green);color:white;padding:17px clamp(14px,4vw,34px);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-weight:850;letter-spacing:.06em;font-size:19px}.subtitle{font-size:12px;opacity:.8;letter-spacing:.1em}
+main{max-width:1400px;margin:auto;padding:20px clamp(12px,3vw,28px)}
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 8px #10231a08}
+h1,h2,h3{margin:0 0 10px}h1{font-size:24px}h2{font-size:18px}p{color:var(--muted)}
+label{display:block;font-weight:650;font-size:13px;margin-bottom:5px}input,select{width:100%;padding:10px 11px;border:1px solid #cbd4cd;border-radius:8px;background:white;color:var(--ink);min-width:0}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:0 0 auto}
+#loginPanel{max-width:470px;margin:8vh auto}.full{width:100%}.hint{font-size:12px}.hidden{display:none!important}
+.status{font-size:12px;padding:6px 10px;border-radius:99px;background:#e5eee7;color:var(--green)}.status.offline{background:#fff0d7;color:#7a5200}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:3px 0 12px;margin-top:12px}.tab{white-space:nowrap;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--green);padding:9px 13px}.tab.active{background:var(--green);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{padding:12px;border:1px solid var(--line);border-radius:10px;background:#fbfcfa}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{font-size:23px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:separate;border-spacing:0;width:100%;min-width:900px;background:white}th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px;text-align:center}th{background:#eef2ed;font-size:12px;white-space:nowrap;position:sticky;top:0;z-index:1}td:first-child,th:first-child{text-align:left}tr:last-child td{border-bottom:0}th:last-child,td:last-child{border-right:0}td input{min-width:75px;padding:7px 6px;text-align:center}td input[type=date]{min-width:140px}.pending{font-weight:800;color:var(--green)}.negative{color:var(--red)}
+.sectionhead{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.notice{padding:10px 12px;border-radius:9px;background:#f0f4ef;color:#3f514a;font-size:13px}.error{background:#fff0ef;color:#922e29}.footer{font-size:12px;text-align:center;color:var(--muted);padding:20px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.formgrid{grid-template-columns:1fr}header{align-items:flex-start}.brand{font-size:17px}main{padding:12px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">S.K. TAILOR'S</div><div class="subtitle">PRODUCTION MANAGER</div></div>
+  <div class="row"><span id="syncStatus" class="status offline">Not connected</span><button id="logoutBtn" class="secondary hidden">Log out</button></div>
+</header>
+<main>
+  <section id="loginPanel" class="card">
+    <h1>Production login</h1>
+    <p>Sign in to view and update the shared production sheets.</p>
+    <div class="row" style="margin-bottom:14px"><button id="workerMode" class="secondary">Worker login</button><button id="ownerMode" class="secondary">Owner login</button></div>
+    <form id="workerLogin">
+      <div style="margin-bottom:12px"><label for="workerSelect">Select your name</label><select id="workerSelect" required><option value="">Connect to load workers…</option></select></div>
+      <div style="margin-bottom:14px"><label for="workerPin">PIN</label><input id="workerPin" type="password" minlength="6" autocomplete="current-password" required placeholder="Enter your PIN"></div>
+      <button class="full" type="submit">Log in</button>
+    </form>
+    <form id="ownerLogin" class="hidden">
+      <div style="margin-bottom:12px"><label for="ownerEmail">Owner email</label><input id="ownerEmail" type="email" autocomplete="username" required></div>
+      <div style="margin-bottom:14px"><label for="ownerPassword">Password</label><input id="ownerPassword" type="password" autocomplete="current-password" required></div>
+      <button class="full" type="submit">Log in as owner</button>
+    </form>
+    <div id="loginMessage" class="notice" style="margin-top:14px">Setup is required before first use. Follow SETUP.md in the downloaded package.</div>
+  </section>
+
+  <section id="appPanel" class="hidden">
+    <div class="card">
+      <div class="sectionhead"><div><h1>Production overview</h1><p style="margin:0">All signed-in users can view and edit every worker's production records.</p></div><div class="row"><button id="exportBtn" class="secondary">Export all to CSV</button></div></div>
+      <div class="stats" style="margin-top:16px">
+        <div class="stat"><small>Shirts assigned</small><strong id="sumSA">0</strong></div>
+        <div class="stat"><small>Shirts completed</small><strong id="sumSC">0</strong></div>
+        <div class="stat"><small>Pants assigned</small><strong id="sumPA">0</strong></div>
+        <div class="stat"><small>Pants completed</small><strong id="sumPC">0</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sectionhead"><div><h2>Worker sheets</h2><div class="hint">Each tab is a separate worker's spreadsheet.</div></div><button id="addWorkerToggle" class="secondary hidden">+ Add worker</button></div>
+      <div id="tabs" class="tabs"></div>
+      <div id="addWorkerPanel" class="hidden">
+        <form id="addWorkerForm" class="formgrid" style="margin:8px 0 16px">
+          <div><label for="newWorkerName">Worker name</label><input id="newWorkerName" required maxlength="60" placeholder="e.g. Rahul"></div>
+          <div><label for="newWorkerPin">Temporary PIN (minimum 6 characters)</label><input id="newWorkerPin" type="password" minlength="6" required placeholder="Create a PIN"></div>
+          <div class="row"><button type="submit">Create worker</button><button type="button" id="cancelAddWorker" class="secondary">Cancel</button></div>
+        </form>
+        <div class="notice">Give the PIN to that worker privately. Each worker can edit all production sheets, as requested.</div>
+      </div>
+      <div class="sectionhead" style="margin:10px 0 12px"><h2 id="sheetTitle">Select a worker</h2><button id="addRowBtn">+ Add daily row</button></div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Date</th><th>Shirts assigned</th><th>Shirts completed</th><th>Shirts pending</th><th>Pants assigned</th><th>Pants completed</th><th>Pants pending</th><th>Action</th></tr></thead>
+          <tbody id="recordsBody"><tr><td colspan="8">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="hint">Pending is calculated automatically as assigned minus completed. Keep completed quantities up to date; negative pending means completed quantity is greater than assigned.</p>
+    </div>
+  </section>
+  <div class="footer">S.K. TAILOR'S · Shared production records</div>
+</main>
+
+<script type="module">
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+/* Replace these placeholder values with your Firebase web-app configuration. */
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY_HERE",
+  authDomain: "PASTE_PROJECT_ID_HERE.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID_HERE",
+  appId: "PASTE_APP_ID_HERE"
+};
+const configured = !Object.values(firebaseConfig).some(v => String(v).startsWith("PASTE_"));
+const $ = id => document.getElementById(id);
+let app, auth, db, currentUser=null, currentProfile=null, workers=[], activeWorker=null, stopWorkers=null, stopRows=null, rowData=[];
+const loginMessage = msg => { $("loginMessage").textContent = msg; };
+function setMode(mode){$("workerLogin").classList.toggle("hidden",mode!=="worker");$("ownerLogin").classList.toggle("hidden",mode!=="owner");}
+$("workerMode").onclick=()=>setMode("worker"); $("ownerMode").onclick=()=>setMode("owner");
+function setStatus(text,ok=false){$("syncStatus").textContent=text;$("syncStatus").classList.toggle("offline",!ok);}
+function showLogin(){ $("loginPanel").classList.remove("hidden"); $("appPanel").classList.add("hidden"); $("logoutBtn").classList.add("hidden");}
+function showApp(){ $("loginPanel").classList.add("hidden"); $("appPanel").classList.remove("hidden"); $("logoutBtn").classList.remove("hidden"); }
+function safeEmail(name){return "worker_"+name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,35)+"@sktailors.app";}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function num(v){const n=Number(v);return Number.isFinite(n)&&n>=0?Math.floor(n):0;}
+function dateToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+async function boot(){
+ if(!configured){setStatus("Setup needed");loginMessage("First connect this app to your Firebase project. Open SETUP.md and replace the placeholder Firebase configuration in index.html.");return;}
+ try{app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);setStatus("Connecting…");await loadLoginWorkers();onAuthStateChanged(auth,async user=>{currentUser=user;if(!user){currentProfile=null;showLogin();if(stopWorkers)stopWorkers();if(stopRows)stopRows();setStatus("Signed out");return;}try{const p=await getDoc(doc(db,"users",user.uid));if(!p.exists())throw new Error("This account has no user profile. Check SETUP.md.");currentProfile=p.data();showApp();$("addWorkerToggle").classList.toggle("hidden",currentProfile.role!=="owner");watchWorkers();setStatus("Online · syncing",true);}catch(e){loginMessage(e.message);await signOut(auth);}});}
+ catch(e){setStatus("Connection error");loginMessage("Firebase connection failed: "+e.message);}
+}
+async function loadLoginWorkers(){try{const snap=await getDocs(collection(db,"workers"));workers=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.name.localeCompare(b.name));renderLoginWorkers();}catch(e){loginMessage("Could not load worker list. Check Firebase setup and security rules.");}}
+function renderLoginWorkers(){const sel=$("workerSelect");sel.innerHTML='<option value="">Select worker…</option>'+workers.map(w=>`<option value="${esc(w.id)}">${esc(w.name)}</option>`).join("");}
+$("workerLogin").addEventListener("submit",async e=>{e.preventDefault();if(!auth)return;const w=workers.find(x=>x.id===$("workerSelect").value);if(!w){loginMessage("Select a worker first.");return;}const btn=e.submitter;btn.disabled=true;try{await signInWithEmailAndPassword(auth,w.email,$("workerPin").value);loginMessage("Signed in.");}catch(err){loginMessage("Login failed. Check the selected name and PIN.");}finally{btn.disabled=false;}});
+$("ownerLogin").addEventListener("submit",async e=>{e.preventDefault();if(!auth)return;const btn=e.submitter;btn.disabled=true;try{await signInWithEmailAndPassword(auth,$("ownerEmail").value.trim(),$("ownerPassword").value);loginMessage("Signed in.");}catch(err){loginMessage("Owner login failed. Check email and password.");}finally{btn.disabled=false;}});
+$("logoutBtn").onclick=async()=>{if(auth)await signOut(auth);};
+function watchWorkers(){if(stopWorkers)stopWorkers();stopWorkers=onSnapshot(collection(db,"workers"),snap=>{workers=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.name.localeCompare(b.name));renderLoginWorkers();renderTabs();if(!activeWorker||!workers.some(w=>w.id===activeWorker))activeWorker=workers[0]?.id||null;if(activeWorker)selectWorker(activeWorker);else{$("sheetTitle").textContent="No workers yet";$("recordsBody").innerHTML='<tr><td colspan="8">Owner: use “Add worker” to create the first worker.</td></tr>';}},err=>setStatus("Sync error"));}
+function renderTabs(){$("tabs").innerHTML=workers.map(w=>`<button class="tab ${w.id===activeWorker?"active":""}" data-id="${esc(w.id)}">${esc(w.name)}</button>`).join("");$("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>selectWorker(b.dataset.id));}
+function selectWorker(id){activeWorker=id;const w=workers.find(x=>x.id===id);if(!w)return;$("sheetTitle").textContent=w.name+" — production sheet";renderTabs();if(stopRows)stopRows();$("recordsBody").innerHTML='<tr><td colspan="8">Loading records…</td></tr>';stopRows=onSnapshot(query(collection(db,"workers",id,"records"),orderBy("date","asc")),snap=>{rowData=snap.docs.map(d=>({id:d.id,...d.data()}));renderRows();updateTotals();setStatus("Online · saved",true);},err=>{setStatus("Sync error");$("recordsBody").innerHTML='<tr><td colspan="8">Could not load rows. Check Firestore rules.</td></tr>';});}
+function renderRows(){$("recordsBody").innerHTML=rowData.length?rowData.map(r=>`<tr data-row="${esc(r.id)}">
+<td><input aria-label="Date" type="date" data-field="date" value="${esc(r.date||dateToday())}"></td>
+<td><input aria-label="Shirts assigned" type="number" min="0" step="1" data-field="shirtsAssigned" value="${num(r.shirtsAssigned)}"></td>
+<td><input aria-label="Shirts completed" type="number" min="0" step="1" data-field="shirtsCompleted" value="${num(r.shirtsCompleted)}"></td>
+<td class="pending ${num(r.shirtsAssigned)-num(r.shirtsCompleted)<0?"negative":""}">${num(r.shirtsAssigned)-num(r.shirtsCompleted)}</td>
+<td><input aria-label="Pants assigned" type="number" min="0" step="1" data-field="pantsAssigned" value="${num(r.pantsAssigned)}"></td>
+<td><input aria-label="Pants completed" type="number" min="0" step="1" data-field="pantsCompleted" value="${num(r.pantsCompleted)}"></td>
+<td class="pending ${num(r.pantsAssigned)-num(r.pantsCompleted)<0?"negative":""}">${num(r.pantsAssigned)-num(r.pantsCompleted)}</td>
+<td><button class="danger deleteRow">Delete</button></td></tr>`).join(""):'<tr><td colspan="8">No records yet. Tap “Add daily row” to start.</td></tr>';
+$("recordsBody").querySelectorAll("input").forEach(inp=>{inp.addEventListener("change",async()=>{const tr=inp.closest("tr"),id=tr.dataset.row,field=inp.dataset.field;let value=inp.value;if(field!=="date")value=num(value);try{setStatus("Saving…");await updateDoc(doc(db,"workers",activeWorker,"records",id),{[field]:value,updatedAt:serverTimestamp()});}catch(e){setStatus("Save failed");alert("Could not save this change. Check your connection.");}});});
+$("recordsBody").querySelectorAll(".deleteRow").forEach(btn=>btn.onclick=async()=>{if(!confirm("Delete this daily row?"))return;try{await deleteDoc(doc(db,"workers",activeWorker,"records",btn.closest("tr").dataset.row));}catch(e){alert("Could not delete row.");}});
+}
+let totalsRequest=0;
+async function updateTotals(){const requestId=++totalsRequest;let sa=0,sc=0,pa=0,pc=0;try{for(const w of workers){const snap=await getDocs(collection(db,"workers",w.id,"records"));for(const d of snap.docs){const r=d.data();sa+=num(r.shirtsAssigned);sc+=num(r.shirtsCompleted);pa+=num(r.pantsAssigned);pc+=num(r.pantsCompleted);}}if(requestId!==totalsRequest)return;$("sumSA").textContent=sa;$("sumSC").textContent=sc;$("sumPA").textContent=pa;$("sumPC").textContent=pc;}catch(e){/* The current sheet remains usable if overview totals cannot refresh. */}}
+$("addRowBtn").onclick=async()=>{if(!activeWorker)return;try{await addDoc(collection(db,"workers",activeWorker,"records"),{date:dateToday(),shirtsAssigned:0,shirtsCompleted:0,pantsAssigned:0,pantsCompleted:0,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});}catch(e){alert("Could not add row. Check your connection.");}};
+$("addWorkerToggle").onclick=()=>{$("addWorkerPanel").classList.toggle("hidden");};
+$("cancelAddWorker").onclick=()=>{$("addWorkerPanel").classList.add("hidden");};
+$("addWorkerForm").addEventListener("submit",async e=>{e.preventDefault();if(currentProfile?.role!=="owner")return;const name=$("newWorkerName").value.trim(),pin=$("newWorkerPin").value;if(!name||pin.length<6)return;const email=safeEmail(name);if(workers.some(w=>w.name.toLowerCase()===name.toLowerCase())){alert("A worker with this name already exists. Add a unique name.");return;}const btn=e.submitter;btn.disabled=true;let secondary=null;try{secondary=initializeApp(firebaseConfig,"worker-creator-"+Date.now());const secAuth=getAuth(secondary);const cred=await createUserWithEmailAndPassword(secAuth,email,pin);const workerDb=getFirestore(secondary);await setDoc(doc(workerDb,"users",cred.user.uid),{role:"worker",name,createdAt:serverTimestamp()});const workerRef=doc(collection(db,"workers"));await setDoc(workerRef,{name,email,createdAt:serverTimestamp()});await signOut(secAuth);await deleteApp(secondary);$("addWorkerForm").reset();$("addWorkerPanel").classList.add("hidden");alert("Worker created. Share their name and PIN privately.");}catch(err){if(secondary)try{await deleteApp(secondary)}catch{}alert("Could not create worker. The PIN must be at least 6 characters and the name must be unique. If creation partly succeeded, check Firebase Authentication before retrying.");}finally{btn.disabled=false;}});
+$("exportBtn").onclick=async()=>{try{const lines=[["Worker","Date","Shirts Assigned","Shirts Completed","Shirts Pending","Pants Assigned","Pants Completed","Pants Pending"]];for(const w of workers){const snap=await getDocs(query(collection(db,"workers",w.id,"records"),orderBy("date","asc")));snap.docs.forEach(d=>{const r=d.data();lines.push([w.name,r.date||"",num(r.shirtsAssigned),num(r.shirtsCompleted),num(r.shirtsAssigned)-num(r.shirtsCompleted),num(r.pantsAssigned),num(r.pantsCompleted),num(r.pantsAssigned)-num(r.pantsCompleted)]);});}const csv=lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="SK-Tailors-production.csv";a.click();URL.revokeObjectURL(url);}catch(e){alert("Export failed. Check connection and permissions.");}};
+boot();
+</script>
+</body></html>
